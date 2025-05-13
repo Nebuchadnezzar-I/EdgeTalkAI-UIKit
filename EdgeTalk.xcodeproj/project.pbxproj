@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0B55A8BE2DD3A2F000CD34E7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B55A8BD2DD3A2F000CD34E7 /* SnapKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		0B55A8942DD3637E00CD34E7 /* EdgeTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EdgeTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B55A8BE2DD3A2F000CD34E7 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = EdgeTalk;
 			packageProductDependencies = (
+				0B55A8BD2DD3A2F000CD34E7 /* SnapKit */,
 			);
 			productName = EdgeTalk;
 			productReference = 0B55A8942DD3637E00CD34E7 /* EdgeTalk.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = 0B55A88B2DD3637E00CD34E7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				0B55A8BC2DD3A2F000CD34E7 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0B55A8952DD3637E00CD34E7 /* Products */;
 			projectDirPath = "";
@@ -150,7 +159,6 @@
 				INFOPLIST_FILE = EdgeTalk/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -178,7 +186,6 @@
 				INFOPLIST_FILE = EdgeTalk/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -335,6 +342,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0B55A8BC2DD3A2F000CD34E7 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0B55A8BD2DD3A2F000CD34E7 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B55A8BC2DD3A2F000CD34E7 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0B55A88C2DD3637E00CD34E7 /* Project object */;
 }
