@@ -13,11 +13,12 @@ final class Header: UIView {
 
     // MARK: - Properties
 
+    private var chatPageIndex: Int = 2
     private var labelCenterX: Constraint?
     private var buttonCenterX: Constraint?
 
     private var lastPage: Int = 0
-    private let titles = [
+    private var titles = [
         "Negotiations",
         "Preferences",
         "Chat",
@@ -41,15 +42,18 @@ final class Header: UIView {
         return view
     }()
 
-    private lazy var backIconContainer: UIView = {
-        let view = UIView()
+    private lazy var backIconContainer: UIButton = {
+        let view = UIButton()
         view.backgroundColor = .label
         view.layer.cornerRadius = 32
         view.layer.masksToBounds = true
 
-        let tap = UITapGestureRecognizer(
-            target: self, action: #selector(handleBackTap))
-        view.addGestureRecognizer(tap)
+        view.addTarget(
+            self, action: #selector(scaleDownTap), for: .touchDown)
+
+        view.addTarget(
+            self, action: #selector(scaleUpTap),
+            for: [.touchUpInside, .touchUpOutside, .touchCancel])
 
         return view
     }()
@@ -157,9 +161,10 @@ final class Header: UIView {
 
         // Blur
 
-        let isEnteringBlurPage = (from == 2 || to == 2)
+        let isEnteringBlurPage = (from == chatPageIndex || to == chatPageIndex)
         if isEnteringBlurPage {
-            let fadeInProgress: CGFloat = to == 2 ? progress : 1 - progress
+            let fadeInProgress: CGFloat =
+                to == chatPageIndex ? progress : 1 - progress
             blurView.alpha = fadeInProgress
         } else {
             blurView.alpha = 0
@@ -179,7 +184,7 @@ final class Header: UIView {
     }
 
     private func labelXOffset(for page: Int) -> CGFloat {
-        let isLeft = page % 2 == 0
+        let isLeft = (page == 0 || page == chatPageIndex)
         let screenWidth = UIScreen.main.bounds.width
         let labelWidth = mainLabel.intrinsicContentSize.width
         let sideInset: CGFloat = 16
@@ -194,14 +199,20 @@ final class Header: UIView {
         let buttonWidth: CGFloat = 64
         let sideInset: CGFloat = 16
 
-        let isVisible = page % 2 != 0
+        let isVisible = (page != chatPageIndex && page != 0)
 
         return isVisible
             ? -(screenWidth / 2 - (sideInset + buttonWidth / 2))
             : -(screenWidth / 2 + buttonWidth + sideInset)
     }
 
-    @objc private func handleBackTap() {
+    @objc private func scaleDownTap(_ sender: UIButton) {
+        sender.scaleDown(to: 0.95, duration: 0.1)
+    }
+
+    @objc private func scaleUpTap(_ sender: UIButton) {
+        sender.scaleUp(duration: 0.1)
+
         if Carousel.shared.currentIndex == 1 {
             Carousel.shared.scrollToPage(index: 0)
         }
@@ -210,10 +221,18 @@ final class Header: UIView {
             Carousel.shared.scrollToPage(index: 2)
         }
     }
-}
 
-extension Array {
-    subscript(safe index: Int) -> Element? {
-        return indices.contains(index) ? self[index] : nil
+    @objc func updateTitles(_ newTitles: [String]) {
+        self.titles = newTitles
+
+        if let chatIndex = newTitles.firstIndex(where: { $0 == "Chat" }) {
+            self.chatPageIndex = chatIndex
+        } else {
+            self.chatPageIndex = -1
+        }
+
+        let currentIndex = Carousel.shared.currentIndex
+        lastPage = currentIndex
+        mainLabel.text = titles[safe: currentIndex] ?? ""
     }
 }

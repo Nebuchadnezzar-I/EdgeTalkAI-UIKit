@@ -8,16 +8,9 @@
 import SnapKit
 import UIKit
 
-final class Negotiation: UIView {
-
-    // MARK: - Properties
+final class Negotiation: UIButton {
 
     // MARK: - UI Elements
-
-    private lazy var container: UIView = {
-        let view = UIView()
-        return view
-    }()
 
     private lazy var mainText: UILabel = {
         let label = UILabel()
@@ -34,12 +27,6 @@ final class Negotiation: UIView {
         label.font = .systemFont(ofSize: 16, weight: .regular)
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.isUserInteractionEnabled = true
-
-        let tap = UITapGestureRecognizer(
-            target: self, action: #selector(handleTap))
-        label.addGestureRecognizer(tap)
-
         return label
     }()
 
@@ -47,36 +34,31 @@ final class Negotiation: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.initialize()
+        initialize()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.initialize()
+        initialize()
     }
 
     private func initialize() {
         self.translatesAutoresizingMaskIntoConstraints = false
         setupHierarchy()
         setupView()
+
+        // Enable visual feedback
+        self.backgroundColor = .secondarySystemBackground
+        self.layer.cornerRadius = 16
+        self.clipsToBounds = true
     }
 
-    // MARK: - Setup Methods
-
     func setupHierarchy() {
-        addSubview(container)
-        container.addSubview(mainText)
-        container.addSubview(subText)
+        addSubview(mainText)
+        addSubview(subText)
     }
 
     func setupView() {
-        container.snp.makeConstraints { make in
-            make.edges.equalTo(self)
-        }
-        container.backgroundColor = .secondarySystemBackground
-        container.layer.cornerRadius = 16
-        container.clipsToBounds = true
-
         mainText.snp.makeConstraints { make in
             make.top.equalTo(self).offset(24)
             make.leading.equalTo(self).offset(16)
@@ -88,11 +70,5 @@ final class Negotiation: UIView {
             make.leading.equalTo(self).offset(16)
             make.trailing.equalTo(self).offset(-16)
         }
-    }
-
-    // MARK: - Actions
-
-    @objc private func handleTap() {
-        Carousel.shared.scrollToPage(index: 1)
     }
 }

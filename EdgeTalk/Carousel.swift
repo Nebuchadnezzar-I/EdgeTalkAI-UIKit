@@ -22,6 +22,8 @@ final class Carousel: UIView, UIScrollViewDelegate {
         scrollView.isPagingEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.delaysContentTouches = false
+        scrollView.canCancelContentTouches = true
         return scrollView
     }()
 
@@ -138,5 +140,21 @@ final class Carousel: UIView, UIScrollViewDelegate {
         let xOffset = CGFloat(index) * scrollView.bounds.width
         let targetOffset = CGPoint(x: xOffset, y: 0)
         scrollView.setContentOffset(targetOffset, animated: animated)
+    }
+
+    @objc func removePreferences() {
+        guard stackView.arrangedSubviews.firstIndex(of: preferences) != nil
+        else { return }
+        stackView.removeArrangedSubview(preferences)
+        preferences.removeFromSuperview()
+    }
+
+    @objc func addPreferencesBack() {
+        guard !stackView.arrangedSubviews.contains(preferences) else { return }
+        stackView.insertArrangedSubview(preferences, at: 1)
+
+        preferences.snp.makeConstraints { make in
+            make.width.equalTo(self)
+        }
     }
 }

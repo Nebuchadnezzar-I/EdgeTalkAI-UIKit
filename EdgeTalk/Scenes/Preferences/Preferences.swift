@@ -84,22 +84,26 @@ final class Preferences: UIView {
         return label
     }()
 
-    private lazy var chatButton: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.isUserInteractionEnabled = true
-        label.text = "Chat"
-        label.textColor = .background
-        label.backgroundColor = .label
-        label.textAlignment = .center
-        label.layer.cornerRadius = 24
-        label.clipsToBounds = true
+    private lazy var chatButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Chat", for: .normal)
+        button.setTitleColor(.systemBackground, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        button.titleLabel?.textAlignment = .center
 
-        let tap = UITapGestureRecognizer(
-            target: self, action: #selector(handleChatButton))
-        label.addGestureRecognizer(tap)
+        button.isUserInteractionEnabled = true
+        button.backgroundColor = .label
+        button.layer.cornerRadius = 24
+        button.clipsToBounds = true
 
-        return label
+        button.addTarget(
+            self, action: #selector(scaleDownTap), for: .touchDown)
+
+        button.addTarget(
+            self, action: #selector(scaleUpTap),
+            for: [.touchUpInside, .touchUpOutside, .touchCancel])
+
+        return button
     }()
 
     // MARK: - UI Elements
@@ -168,22 +172,15 @@ final class Preferences: UIView {
 
     // MARK: - Actions
 
-    @objc private func handleChatButton() {
-        Carousel.shared.scrollToPage(index: 2)
-    }
-}
-
-final class InsetLabel: UILabel {
-    var textInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0)
-
-    override func drawText(in rect: CGRect) {
-        super.drawText(in: rect.inset(by: textInsets))
+    @objc private func scaleDownTap(_ sender: UIButton) {
+        sender.scaleDown(to: 0.98, duration: 0.1)
     }
 
-    override var intrinsicContentSize: CGSize {
-        let size = super.intrinsicContentSize
-        return CGSize(
-            width: size.width + textInsets.left + textInsets.right,
-            height: size.height + textInsets.top + textInsets.bottom)
+    @objc private func scaleUpTap(_ sender: UIButton) {
+        sender.scaleUp(duration: 0.1)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            Carousel.shared.scrollToPage(index: 2)
+        }
     }
 }

@@ -26,9 +26,34 @@ final class Negotiations: UIView {
         return label
     }()
 
+    private lazy var backIconContainer: UIButton = {
+        let view = UIButton()
+        view.backgroundColor = .secondarySystemBackground
+        view.layer.cornerRadius = 24
+        view.layer.masksToBounds = true
+
+        view.addTarget(
+            self, action: #selector(scaleDownTap), for: .touchDown)
+
+        view.addTarget(
+            self, action: #selector(scaleUpTap),
+            for: [.touchUpInside, .touchUpOutside, .touchCancel])
+
+        return view
+    }()
+
+    private lazy var backIcon: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "plus"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = .label
+        return imageView
+    }()
+
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = true
+        scrollView.delaysContentTouches = false
+        scrollView.canCancelContentTouches = true
         return scrollView
     }()
 
@@ -66,9 +91,19 @@ final class Negotiations: UIView {
         addSubview(scrollView)
         scrollView.addSubview(stackView)
 
+        addSubview(backIconContainer)
+        backIconContainer.addSubview(backIcon)
+
         for _ in 0..<10 {
             let negotiation = Negotiation()
             stackView.addArrangedSubview(negotiation)
+
+            negotiation.addTarget(
+                self, action: #selector(scaleDownTapList), for: .touchDown)
+
+            negotiation.addTarget(
+                self, action: #selector(scaleUpTapList),
+                for: [.touchUpInside, .touchUpOutside, .touchCancel])
 
             negotiation.snp.makeConstraints { make in
                 make.height.equalTo(145)
@@ -80,8 +115,20 @@ final class Negotiations: UIView {
         mainSearch.snp.makeConstraints { make in
             make.top.equalTo(150)
             make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.trailing.equalTo(backIconContainer.snp.leading).offset(-16)
             make.height.equalTo(48)
+        }
+
+        backIconContainer.snp.makeConstraints { make in
+            make.top.equalTo(150)
+            make.trailing.equalToSuperview().offset(-16)
+            make.width.equalTo(48)
+            make.height.equalTo(48)
+        }
+
+        backIcon.snp.makeConstraints { make in
+            make.width.height.equalTo(20)
+            make.center.equalToSuperview()
         }
 
         scrollView.snp.makeConstraints { make in
@@ -99,6 +146,36 @@ final class Negotiations: UIView {
 
     // MARK: - Actions
 
+    @objc private func scaleDownTap(_ sender: UIButton) {
+        sender.scaleDown(to: 0.95, duration: 0.1)
+    }
+
+    @objc private func scaleUpTap(_ sender: UIButton) {
+        sender.scaleUp(duration: 0.1)
+        Carousel.shared.addPreferencesBack()
+        Header.shared.updateTitles([
+            "Negotiations",
+            "Preferences",
+            "Chat",
+            "AI Options",
+        ])
+        Carousel.shared.scrollToPage(index: 1)
+    }
+
+    @objc private func scaleDownTapList(_ sender: UIButton) {
+        sender.scaleDown(to: 0.98, duration: 0.1)
+    }
+
+    @objc private func scaleUpTapList(_ sender: UIButton) {
+        sender.scaleUp(duration: 0.1)
+        Carousel.shared.removePreferences()
+        Header.shared.updateTitles([
+            "Negotiations",
+            "Chat",
+            "AI Options",
+        ])
+        Carousel.shared.scrollToPage(index: 1)
+    }
 }
 
 final class InsetTextField: UITextField {
