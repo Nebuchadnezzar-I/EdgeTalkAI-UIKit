@@ -7,6 +7,15 @@
 
 import UIKit
 
+func dismissKeyboard() {
+    UIApplication.shared.sendAction(
+        #selector(UIResponder.resignFirstResponder),
+        to: nil,
+        from: nil,
+        for: nil
+    )
+}
+
 final class InsetLabel: UILabel {
     var textInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0)
 

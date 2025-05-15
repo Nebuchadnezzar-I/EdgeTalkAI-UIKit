@@ -36,22 +36,22 @@ final class Carousel: UIView, UIScrollViewDelegate {
 
     // Scenes
 
-    private lazy var negotiations: Negotiations = {
+    lazy var negotiations: Negotiations = {
         let negotiations = Negotiations()
         return negotiations
     }()
 
-    private lazy var preferences: Preferences = {
+    lazy var preferences: Preferences = {
         let preferences = Preferences()
         return preferences
     }()
 
-    private lazy var chat: Chat = {
+    lazy var chat: Chat = {
         let chat = Chat()
         return chat
     }()
 
-    private lazy var aiTools: AITools = {
+    lazy var aiTools: AITools = {
         let aiTools = AITools()
         return aiTools
     }()
@@ -119,6 +119,8 @@ final class Carousel: UIView, UIScrollViewDelegate {
     // MARK: - Actions
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        dismissKeyboard()
+        
         let offset = scrollView.contentOffset.x
         let width = scrollView.bounds.width
 
@@ -137,6 +139,8 @@ final class Carousel: UIView, UIScrollViewDelegate {
     }
 
     func scrollToPage(index: Int, animated: Bool = true) {
+        dismissKeyboard()
+        
         let xOffset = CGFloat(index) * scrollView.bounds.width
         let targetOffset = CGPoint(x: xOffset, y: 0)
         scrollView.setContentOffset(targetOffset, animated: animated)

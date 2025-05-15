@@ -12,6 +12,8 @@ final class Preferences: UIView {
 
     // MARK: - Properties
 
+    // MARK: - UI Elements
+
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -105,8 +107,6 @@ final class Preferences: UIView {
 
         return button
     }()
-
-    // MARK: - UI Elements
 
     private lazy var placeholder: UILabel = {
         let view = UILabel()

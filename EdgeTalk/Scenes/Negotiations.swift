@@ -28,7 +28,7 @@ final class Negotiations: UIView {
 
     private lazy var backIconContainer: UIButton = {
         let view = UIButton()
-        view.backgroundColor = .secondarySystemBackground
+        view.backgroundColor = .label
         view.layer.cornerRadius = 24
         view.layer.masksToBounds = true
 
@@ -45,7 +45,7 @@ final class Negotiations: UIView {
     private lazy var backIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "plus"))
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .label
+        imageView.tintColor = .background
         return imageView
     }()
 
@@ -94,7 +94,7 @@ final class Negotiations: UIView {
         addSubview(backIconContainer)
         backIconContainer.addSubview(backIcon)
 
-        for _ in 0..<10 {
+        for _ in 0..<3 {
             let negotiation = Negotiation()
             stackView.addArrangedSubview(negotiation)
 

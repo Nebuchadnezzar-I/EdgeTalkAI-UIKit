@@ -12,6 +12,8 @@ final class AITools: UIView {
 
     // MARK: - Properties
 
+    // MARK: - UI Elements
+
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -70,8 +72,6 @@ final class AITools: UIView {
         label.clipsToBounds = true
         return label
     }()
-
-    // MARK: - UI Elements
 
     private lazy var placeholder: UILabel = {
         let view = UILabel()
