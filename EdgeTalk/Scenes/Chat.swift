@@ -99,21 +99,19 @@ final class Chat: UIView {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 8
-        stackView.distribution = .fill
         stackView.alignment = .fill
+        stackView.distribution = .fill
         return stackView
-    }()
-
-    private lazy var spacerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        return view
     }()
 
     private lazy var chatMessage: ChatMessage = {
         let chatMessage = ChatMessage()
         return chatMessage
     }()
+
+    private lazy var topSpacer = UIView()
+    private lazy var bottomSpacer = UIView()
+    private lazy var contentView = UIView()
 
     // MARK: - Initializers
 
@@ -137,7 +135,8 @@ final class Chat: UIView {
 
     func setupHierarchy() {
         addSubview(scrollView)
-        scrollView.addSubview(stackView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(stackView)
 
         addSubview(blurView)
 
@@ -150,19 +149,19 @@ final class Chat: UIView {
         addSubview(micIconContainer)
         micIconContainer.addSubview(micIcon)
 
-        stackView.addArrangedSubview(spacerView)
-        for _ in 0..<2 {
-            let message = ChatMessage()
-            stackView.addArrangedSubview(message)
-        }
+        stackView.addArrangedSubview(topSpacer)
+
+        let message = ChatMessage()
+        stackView.addArrangedSubview(message)
+
+        stackView.addArrangedSubview(bottomSpacer)
     }
 
     func setupView() {
         textField.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview().offset(-32)
-            textFieldBottomConstraint =
-                make.bottom.equalToSuperview().constraint
+            make.bottom.equalToSuperview()
             make.height.equalTo(130)
         }
 
@@ -201,19 +200,30 @@ final class Chat: UIView {
             make.height.equalTo(130)
         }
 
+        topSpacer.snp.makeConstraints {
+            $0.height.equalTo(32)
+        }
+
+        bottomSpacer.snp.makeConstraints {
+            $0.height.equalTo(96)
+        }
+
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
-        stackView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-            make.width.equalTo(scrollView)
+        contentView.snp.makeConstraints { make in
+            make.top.bottom.equalTo(scrollView.contentLayoutGuide)
+            make.leading.trailing.equalTo(scrollView.frameLayoutGuide)
+            make.width.equalTo(scrollView.frameLayoutGuide)
+            make.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide)
+                .priority(.required)
         }
 
-        spacerView.snp.makeConstraints { make in
-            make.height.equalTo(32)
-            make.width.equalToSuperview()
+        stackView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
+
     }
 
     // MARK: - Actions

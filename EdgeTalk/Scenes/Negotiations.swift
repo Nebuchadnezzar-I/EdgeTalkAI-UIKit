@@ -12,7 +12,7 @@ final class Negotiations: UIView {
 
     // MARK: - Properties
 
-    // MARK: - UI Element s
+    // MARK: - UI Elements
 
     private lazy var mainSearch: InsetTextField = {
         let label = InsetTextField()
@@ -51,7 +51,7 @@ final class Negotiations: UIView {
 
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.showsVerticalScrollIndicator = true
+        scrollView.showsVerticalScrollIndicator = false
         scrollView.delaysContentTouches = false
         scrollView.canCancelContentTouches = true
         return scrollView
@@ -94,19 +94,22 @@ final class Negotiations: UIView {
         addSubview(backIconContainer)
         backIconContainer.addSubview(backIcon)
 
-        for _ in 0..<3 {
+        for _ in 0..<10 {
             let negotiation = Negotiation()
             stackView.addArrangedSubview(negotiation)
 
-            negotiation.addTarget(
-                self, action: #selector(scaleDownTapList), for: .touchDown)
-
-            negotiation.addTarget(
-                self, action: #selector(scaleUpTapList),
-                for: [.touchUpInside, .touchUpOutside, .touchCancel])
-
             negotiation.snp.makeConstraints { make in
                 make.height.equalTo(145)
+            }
+
+            negotiation.onTap = {
+                Carousel.shared.removePreferences()
+                Header.shared.updateTitles([
+                    "Negotiations",
+                    "Chat",
+                    "AI Options",
+                ])
+                Carousel.shared.scrollToPage(index: 1)
             }
         }
     }
@@ -152,25 +155,14 @@ final class Negotiations: UIView {
 
     @objc private func scaleUpTap(_ sender: UIButton) {
         sender.scaleUp(duration: 0.1)
+        Carousel.shared.removePreferencesConfig()
         Carousel.shared.addPreferencesBack()
+        Carousel.shared.addChatBack()
+        Carousel.shared.addAIOptionsBack()
+
         Header.shared.updateTitles([
             "Negotiations",
             "Preferences",
-            "Chat",
-            "AI Options",
-        ])
-        Carousel.shared.scrollToPage(index: 1)
-    }
-
-    @objc private func scaleDownTapList(_ sender: UIButton) {
-        sender.scaleDown(to: 0.98, duration: 0.1)
-    }
-
-    @objc private func scaleUpTapList(_ sender: UIButton) {
-        sender.scaleUp(duration: 0.1)
-        Carousel.shared.removePreferences()
-        Header.shared.updateTitles([
-            "Negotiations",
             "Chat",
             "AI Options",
         ])

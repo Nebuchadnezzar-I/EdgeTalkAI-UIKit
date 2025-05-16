@@ -8,7 +8,8 @@
 import SnapKit
 import UIKit
 
-final class Negotiation: UIButton {
+final class Negotiation: UIButton, UIGestureRecognizerDelegate {
+    var onTap: (() -> Void)?
 
     // MARK: - UI Elements
 
@@ -42,12 +43,14 @@ final class Negotiation: UIButton {
         initialize()
     }
 
+    // MARK: - Setup Methods
+
     private func initialize() {
         self.translatesAutoresizingMaskIntoConstraints = false
         setupHierarchy()
         setupView()
+        addGestureRecognizer(gesture)
 
-        // Enable visual feedback
         self.backgroundColor = .secondarySystemBackground
         self.layer.cornerRadius = 16
         self.clipsToBounds = true
@@ -70,5 +73,41 @@ final class Negotiation: UIButton {
             make.leading.equalTo(self).offset(16)
             make.trailing.equalTo(self).offset(-16)
         }
+    }
+
+    // MARK: - Actions
+
+    private lazy var gesture: UILongPressGestureRecognizer = {
+        let g = UILongPressGestureRecognizer(
+            target: self, action: #selector(handlePress(_:)))
+        g.minimumPressDuration = 0.05
+        g.delegate = self
+        g.cancelsTouchesInView = false
+        return g
+    }()
+
+    @objc private func handlePress(_ gesture: UILongPressGestureRecognizer) {
+        guard gesture.state == .began else { return }
+
+        scaleDown(to: 0.98, duration: 0.1)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.scaleUp(duration: 0.1)
+            self.onTap?()
+        }
+    }
+
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer:
+            UIGestureRecognizer
+    ) -> Bool {
+        return true
+    }
+
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        return otherGestureRecognizer is UIPanGestureRecognizer
     }
 }

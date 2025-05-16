@@ -8,6 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController, UIScrollViewDelegate {
+    
     // MARK: - Properties
 
     // MARK: - UI Elements

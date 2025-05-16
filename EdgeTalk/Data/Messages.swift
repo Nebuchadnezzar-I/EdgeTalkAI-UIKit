@@ -7,63 +7,81 @@
 
 import Foundation
 
-struct NegotiationGuidance: Decodable {
-    let clarifyValue: QA
-    let setup: QA
-    let dealDesign: SuggestionAdvice
-    let tactics: SuggestionAdvice
-    let warning: Warning
+struct NegotiationPlan: Decodable {
+    let importantInformation: String
+    let setup: Setup
+    let dealDesign: DealDesign
+    let tactics: Tactics
 
     enum CodingKeys: String, CodingKey {
-        case clarifyValue = "clarify_value"
-        case setup = "3d_setup"
+        case importantInformation = "important_information"
+        case setup
         case dealDesign = "deal_design"
         case tactics
-        case warning
     }
 }
 
-struct QA: Decodable {
-    let question: String
-    let advice: String
+struct Setup: Decodable {
+    let environment: String
+    let participants: [String]
 }
 
-struct SuggestionAdvice: Decodable {
-    let suggestion: String
-    let advice: String
+struct DealDesign: Decodable {
+    let terms: [String]
+    let objectives: [String]
 }
 
-struct Warning: Decodable {
-    let note: String
-    let caution: String
+struct Tactics: Decodable {
+    let approaches: [String]
+    let counterStrategies: [String]
+
+    enum CodingKeys: String, CodingKey {
+        case approaches
+        case counterStrategies = "counter_strategies"
+    }
 }
 
 let json = """
     {
-        "clarify_value": {
-          "question": "Can you specify what makes your work world-class compared to the past agency? For example, unique expertise, faster delivery, superior design, or guaranteed ROI?",
-          "advice": "Clearly articulate the unique benefits and outcomes you bring that justify the higher price."
-        },
-        "3d_setup": {
-          "question": "What do you know about the company's current challenges or goals related to the website? Have you researched their business situation?",
-          "advice": "Use setup phase to uncover their real needs, constraints, and decision-making criteria before the meeting."
-        },
-        "deal_design": {
-          "suggestion": "Consider adding value beyond just redesign, such as performance tracking, training, or phased payment tied to milestones to align incentives.",
-          "advice": "Package your offer to address their hidden interests and risk concerns without lowering your headline price."
-        },
-        "tactics": {
-          "suggestion": "Ask open-ended questions like 'What didn't the previous agency deliver that you'd like to see?' or 'What outcomes are most critical for you in this project?'",
-          "advice": "Frame your price as an investment with clear returns, and be ready to explain why a low price might cost more in the long run."
-        },
-        "warning": {
-          "note": "Avoid directly comparing your price to the €3,500 past payment as an inferior baseline; instead, emphasize the gap in quality and impact to justify your figure.",
-          "caution": "Don't rush to concessions; listen carefully to signals that reveal their priorities or budget constraints first."
-        }
+      "important_information": "You aim to negotiate a €12,000 fee for a 3-month website redesign project with a mid-sized tech company. Their previous payment to another agency was €3,500, indicating their historical price expectations. You believe your work is significantly higher quality and worth more, and you want to avoid lowering your price while designing a deal that appeals to them.",
+      "setup": {
+        "environment": "Negotiation will likely occur in a professional setting, possibly a virtual meeting or in-person at their office, given the nature of consulting engagements.",
+        "participants": [
+          "You (consultant)",
+          "Decision makers from the mid-sized tech company, likely including a project manager, marketing lead, and a financial approver"
+        ]
+      },
+      "deal_design": {
+        "terms": [
+          "Project scope covering complete website redesign over 3 months",
+          "Fee of €12,000 fixed or phased payments",
+          "Delivery milestones and timelines",
+          "Quality standards and post-launch support",
+          "Potential value-added services or bonuses"
+        ],
+        "objectives": [
+          "Secure the €12,000 fee without discounting",
+          "Clearly communicate the superior quality and value compared to prior agency",
+          "Structure the deal to make the investment feel justified and strategic for the company"
+        ]
+      },
+      "tactics": {
+        "approaches": [
+          "Use value-based selling emphasizing ROI and superior outcomes",
+          "Explore their underlying needs and past dissatisfaction or limitations with previous agency",
+          "Propose phased deliverables with milestones to demonstrate ongoing value",
+          "Ask insightful questions to uncover constraints and decision criteria"
+        ],
+        "counter_strategies": [
+          "They might push back referencing their previous €3,500 payment as a benchmark",
+          "They could challenge the higher price without clear justification",
+          "Ask for scope reduction or additional discounts"
+        ]
+      }
     }
     """
 
-func getGuidance() -> NegotiationGuidance {
+func getPlan() -> NegotiationPlan {
     let data = json.data(using: .utf8)!
-    return try! JSONDecoder().decode(NegotiationGuidance.self, from: data)
+    return try! JSONDecoder().decode(NegotiationPlan.self, from: data)
 }

@@ -217,6 +217,10 @@ final class Header: UIView {
             Carousel.shared.scrollToPage(index: 0)
         }
 
+        if Carousel.shared.currentIndex == 2 {
+            Carousel.shared.scrollToPage(index: 1)
+        }
+
         if Carousel.shared.currentIndex == 3 {
             Carousel.shared.scrollToPage(index: 2)
         }

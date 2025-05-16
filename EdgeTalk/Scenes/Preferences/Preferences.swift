@@ -22,68 +22,35 @@ final class Preferences: UIView {
         return stackView
     }()
 
-    private lazy var generalLink: InsetLabel = {
-        let label = InsetLabel()
-        label.textInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.backgroundColor = .secondarySystemBackground
-        label.textAlignment = .left
-        label.text = "General"
-        label.layer.cornerRadius = 4
-        label.clipsToBounds = true
-        return label
+    private lazy var generalLink: PreferenceButton = {
+        let button = PreferenceButton(
+            frame: .zero, title: "Reframing", borderPlacement: .top)
+        return button
     }()
 
-    private lazy var notesLink: InsetLabel = {
-        let label = InsetLabel()
-        label.textInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.backgroundColor = .secondarySystemBackground
-        label.textAlignment = .left
-        label.layer.cornerRadius = 4
-        label.text = "Notes"
-        label.layer.cornerRadius = 4
-        label.clipsToBounds = true
-        return label
+    private lazy var notesLink: PreferenceButton = {
+        let button = PreferenceButton(
+            frame: .zero, title: "Notes", borderPlacement: .none)
+        return button
     }()
 
-    private lazy var timelineLink: InsetLabel = {
-        let label = InsetLabel()
-        label.textInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.backgroundColor = .secondarySystemBackground
-        label.textAlignment = .left
-        label.layer.cornerRadius = 4
-        label.text = "Timeline"
-        label.layer.cornerRadius = 4
-        label.clipsToBounds = true
-        return label
+    private lazy var timelineLink: PreferenceButton = {
+        let button = PreferenceButton(
+            frame: .zero, title: "Timeline", borderPlacement: .none)
+        return button
     }()
 
-    private lazy var questionsLink: InsetLabel = {
-        let label = InsetLabel()
-        label.textInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.backgroundColor = .secondarySystemBackground
-        label.textAlignment = .left
-        label.layer.cornerRadius = 4
-        label.text = "Questions"
-        label.layer.cornerRadius = 4
-        label.clipsToBounds = true
-        return label
+    private lazy var questionsLink: PreferenceButton = {
+        let button = PreferenceButton(
+            frame: .zero, title: "Questions", borderPlacement: .none)
+        return button
     }()
 
-    private lazy var mapLink: InsetLabel = {
-        let label = InsetLabel()
-        label.textInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.backgroundColor = .secondarySystemBackground
-        label.textAlignment = .left
-        label.layer.cornerRadius = 4
-        label.text = "Parties interests blockades"
-        label.layer.cornerRadius = 4
-        label.clipsToBounds = true
-        return label
+    private lazy var mapLink: PreferenceButton = {
+        let button = PreferenceButton(
+            frame: .zero, title: "Parties interests blockades",
+            borderPlacement: .bottom)
+        return button
     }()
 
     private lazy var chatButton: UIButton = {
@@ -159,9 +126,6 @@ final class Preferences: UIView {
             }
         }
 
-        stackView.layer.cornerRadius = 24
-        stackView.clipsToBounds = true
-
         chatButton.snp.makeConstraints { make in
             make.bottom.equalTo(self).offset(-48)
             make.leading.equalToSuperview().offset(16)
@@ -180,6 +144,16 @@ final class Preferences: UIView {
         sender.scaleUp(duration: 0.1)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            Carousel.shared.removePreferencesConfig()
+            Carousel.shared.addChatBack()
+            Carousel.shared.addAIOptionsBack()
+            Header.shared.updateTitles([
+                "Negotiations",
+                "Preferences",
+                "Chat",
+                "AI Options",
+            ])
+
             Carousel.shared.scrollToPage(index: 2)
         }
     }

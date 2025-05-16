@@ -7,6 +7,28 @@
 
 import UIKit
 
+final class PaddingLabel: UILabel {
+    var insets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+
+    override func drawText(in rect: CGRect) {
+        super.drawText(in: rect.inset(by: insets))
+    }
+
+    override var intrinsicContentSize: CGSize {
+        let size = super.intrinsicContentSize
+        return CGSize(
+            width: size.width + insets.left + insets.right,
+            height: size.height + insets.top + insets.bottom
+        )
+    }
+}
+
+enum BorderPlacement {
+    case top
+    case bottom
+    case none
+}
+
 func dismissKeyboard() {
     UIApplication.shared.sendAction(
         #selector(UIResponder.resignFirstResponder),

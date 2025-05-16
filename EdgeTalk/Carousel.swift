@@ -46,6 +46,11 @@ final class Carousel: UIView, UIScrollViewDelegate {
         return preferences
     }()
 
+    lazy var preferencesConfig: PreferencesConfig = {
+        let preferencesConfig = PreferencesConfig()
+        return preferencesConfig
+    }()
+
     lazy var chat: Chat = {
         let chat = Chat()
         return chat
@@ -120,7 +125,7 @@ final class Carousel: UIView, UIScrollViewDelegate {
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         dismissKeyboard()
-        
+
         let offset = scrollView.contentOffset.x
         let width = scrollView.bounds.width
 
@@ -140,11 +145,13 @@ final class Carousel: UIView, UIScrollViewDelegate {
 
     func scrollToPage(index: Int, animated: Bool = true) {
         dismissKeyboard()
-        
+
         let xOffset = CGFloat(index) * scrollView.bounds.width
         let targetOffset = CGPoint(x: xOffset, y: 0)
         scrollView.setContentOffset(targetOffset, animated: animated)
     }
+
+    // Preferences
 
     @objc func removePreferences() {
         guard stackView.arrangedSubviews.firstIndex(of: preferences) != nil
@@ -158,6 +165,69 @@ final class Carousel: UIView, UIScrollViewDelegate {
         stackView.insertArrangedSubview(preferences, at: 1)
 
         preferences.snp.makeConstraints { make in
+            make.width.equalTo(self)
+        }
+    }
+
+    // Preferences Config
+
+    @objc func removePreferencesConfig() {
+        guard
+            stackView.arrangedSubviews.firstIndex(of: preferencesConfig) != nil
+        else { return }
+        stackView.removeArrangedSubview(preferencesConfig)
+        preferencesConfig.removeFromSuperview()
+    }
+
+    @objc func addPreferencesConfigBack() {
+        guard !stackView.arrangedSubviews.contains(preferencesConfig) else {
+            return
+        }
+        stackView.insertArrangedSubview(preferencesConfig, at: 2)
+
+        preferencesConfig.snp.makeConstraints { make in
+            make.width.equalTo(self)
+        }
+    }
+
+    // Chat
+
+    @objc func removeChat() {
+        guard
+            stackView.arrangedSubviews.firstIndex(of: chat) != nil
+        else { return }
+        stackView.removeArrangedSubview(chat)
+        chat.removeFromSuperview()
+    }
+
+    @objc func addChatBack() {
+        guard !stackView.arrangedSubviews.contains(chat) else {
+            return
+        }
+        stackView.insertArrangedSubview(chat, at: 2)
+
+        chat.snp.makeConstraints { make in
+            make.width.equalTo(self)
+        }
+    }
+
+    // AI Options
+
+    @objc func removeAIOptions() {
+        guard
+            stackView.arrangedSubviews.firstIndex(of: aiTools) != nil
+        else { return }
+        stackView.removeArrangedSubview(aiTools)
+        aiTools.removeFromSuperview()
+    }
+
+    @objc func addAIOptionsBack() {
+        guard !stackView.arrangedSubviews.contains(aiTools) else {
+            return
+        }
+        stackView.insertArrangedSubview(aiTools, at: 3)
+
+        aiTools.snp.makeConstraints { make in
             make.width.equalTo(self)
         }
     }

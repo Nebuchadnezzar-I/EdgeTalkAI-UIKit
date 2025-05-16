@@ -9,7 +9,7 @@ import SnapKit
 import UIKit
 
 final class ChatMessage: UIView {
-    private let messageData: NegotiationGuidance = getGuidance()
+    private let messageData: NegotiationPlan = getPlan()
 
     // MARK: - UI
 
@@ -29,7 +29,6 @@ final class ChatMessage: UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         setupHierarchy()
         setupLayout()
-        setupData()
     }
 
     required init?(coder: NSCoder) {
@@ -37,66 +36,153 @@ final class ChatMessage: UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         setupHierarchy()
         setupLayout()
-        setupData()
     }
 
     // MARK: - Setup
-
-    private func createPaddedLabel(text: String, fontSize: CGFloat = 16)
-        -> UIView
-    {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = .systemFont(ofSize: fontSize)
-        label.text = text
-        return label
-    }
 
     private func setupHierarchy() {
         addSubview(stackView)
 
         stackView.addArrangedSubview(
-            createPaddedLabel(
-                text:
-                    "\(messageData.clarifyValue.question):\n\n\(messageData.clarifyValue.advice)"
+            makeMultilineLabel(
+                text: "🔷 Important Info:\n\(messageData.importantInformation)",
+                fontSize: 16,
+                weight: .medium,
+                lineSpacing: 6,
+                backgroundColor: UIColor.systemYellow.withAlphaComponent(0.15)
             )
         )
+
+        // Setup Section
         stackView.addArrangedSubview(
-            createPaddedLabel(
-                text:
-                    "\(messageData.setup.question):\n\n\(messageData.setup.advice)"
+            makeMultilineLabel(
+                text: "🧩 Setup\nEnvironment:\n\(messageData.setup.environment)",
+                fontSize: 15,
+                weight: .semibold,
+                backgroundColor: UIColor.systemBlue.withAlphaComponent(0.08)
             )
         )
+
+        messageData.setup.participants.forEach { participant in
+            stackView.addArrangedSubview(
+                makeMultilineLabel(
+                    text: "• \(participant)",
+                    fontSize: 15
+                )
+            )
+        }
+
+        // Deal Design – Terms
         stackView.addArrangedSubview(
-            createPaddedLabel(
-                text:
-                    "\(messageData.dealDesign.advice):\n\n\(messageData.dealDesign.suggestion)"
+            makeMultilineLabel(
+                text: "📦 Deal Design - Terms:",
+                fontSize: 15,
+                weight: .semibold,
+                backgroundColor: UIColor.systemRed.withAlphaComponent(0.08)
             )
         )
+
+        messageData.dealDesign.terms.forEach { term in
+            stackView.addArrangedSubview(
+                makeMultilineLabel(
+                    text: "• \(term)",
+                    fontSize: 15
+                )
+            )
+        }
+
+        // Deal Design – Objectives
         stackView.addArrangedSubview(
-            createPaddedLabel(
-                text:
-                    "\(messageData.tactics.advice):\n\n\(messageData.tactics.suggestion)"
+            makeMultilineLabel(
+                text: "🎯 Deal Design - Objectives:",
+                fontSize: 15,
+                weight: .semibold,
+                backgroundColor: UIColor.systemGreen.withAlphaComponent(0.08)
             )
         )
+
+        messageData.dealDesign.objectives.forEach { objective in
+            stackView.addArrangedSubview(
+                makeMultilineLabel(
+                    text: "• \(objective)",
+                    fontSize: 15
+                )
+            )
+        }
+
+        // Tactics – Approaches
         stackView.addArrangedSubview(
-            createPaddedLabel(
-                text:
-                    "\(messageData.warning.caution):\n\n\(messageData.warning.note)"
+            makeMultilineLabel(
+                text: "🧠 Tactics - Approaches:",
+                fontSize: 15,
+                weight: .semibold,
+                backgroundColor: UIColor.systemTeal.withAlphaComponent(0.08)
             )
         )
+
+        messageData.tactics.approaches.forEach { approach in
+            stackView.addArrangedSubview(
+                makeMultilineLabel(
+                    text: "• \(approach)",
+                    fontSize: 15
+                )
+            )
+        }
+
+        // Tactics – Counter Strategies
+        stackView.addArrangedSubview(
+            makeMultilineLabel(
+                text: "⚠️ Tactics - Counter Strategies:",
+                fontSize: 15,
+                weight: .semibold,
+                backgroundColor: UIColor.systemPink.withAlphaComponent(0.1)
+            )
+        )
+
+        messageData.tactics.counterStrategies.forEach { strategy in
+            stackView.addArrangedSubview(
+                makeMultilineLabel(
+                    text: "• \(strategy)",
+                    fontSize: 15
+                )
+            )
+        }
     }
 
     private func setupLayout() {
         stackView.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(16)
+            make.edges.equalToSuperview().inset(4)
         }
     }
 
-    private func setupData() {
+    // MARK: - Methods
 
+    func makeMultilineLabel(
+        text: String,
+        fontSize: CGFloat = 15,
+        weight: UIFont.Weight = .regular,
+        lineSpacing: CGFloat = 4,
+        backgroundColor: UIColor? = nil
+    ) -> UILabel {
+        let label = PaddingLabel()
+        label.insets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: fontSize, weight: weight)
+        label.textColor = .label
+        label.backgroundColor = backgroundColor ?? .clear
+        label.layer.cornerRadius = 8
+        label.clipsToBounds = true
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = lineSpacing
+
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: label.font!,
+            .paragraphStyle: paragraphStyle,
+        ]
+
+        label.attributedText = NSAttributedString(
+            string: text, attributes: attributes)
+        return label
     }
-
-    // MARK: - Label Builders
-
 }
